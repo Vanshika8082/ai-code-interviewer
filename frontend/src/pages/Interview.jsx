@@ -405,107 +405,115 @@ function LoadingScreen({ repoUrl }) {
 
 // ─── Start Screen ──────────────────────────────────────────────────────────
 function StartScreen({ repoUrl, setRepoUrl, difficulty, setDifficulty, candidateLevel, setCandidateLevel, interviewMode, setInterviewMode, onStart }) {
-  const levels = [
-    { value:"junior", label:"Junior",   sub:"0–2 yrs" },
-    { value:"mid",    label:"Mid",      sub:"2–5 yrs" },
-    { value:"senior", label:"Senior",   sub:"5+ yrs"  },
-  ];
-  const difficulties = [
-    { value:"easy",   label:"Easy"   },
-    { value:"medium", label:"Medium" },
-    { value:"hard",   label:"Hard"   },
-  ];
-  const modes = [
-    { value:"practice", label:"Practice", sub:"Hints on" },
-    { value:"timed",    label:"Timed",    sub:"2 min/Q"  },
-    { value:"real",     label:"Real",     sub:"No hints" },
-  ];
 
-  const tileStyle = (active) => ({
-    background: active ? "var(--accent-bg)" : "var(--bg-input)",
-    border: `1.5px solid ${active ? "var(--accent)" : "var(--border-mid)"}`,
+  const tileBtn = (active) => ({
+    background: active ? "var(--accent-bg)" : "transparent",
+    border: `1px solid ${active ? "var(--accent)" : "var(--border-mid)"}`,
     color: active ? "var(--accent)" : "var(--muted)",
-    borderRadius:9, padding:"10px 8px", cursor:"pointer", textAlign:"center",
-    transition:"all .15s", fontFamily:"'Syne',sans-serif"
+    borderRadius: 6, padding: "7px 0", cursor: "pointer", textAlign: "center",
+    transition: "all .12s", fontFamily: "'Syne',sans-serif", fontSize: 12, fontWeight: 600,
   });
 
   return (
-    <div style={{ minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", background:"var(--bg)", padding:24, backgroundImage:"radial-gradient(ellipse 70% 50% at 50% -5%,rgba(58,123,253,.07),transparent)" }}>
-      <div style={{ width:"100%", maxWidth:480 }}>
-        {/* Logo */}
-        <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:36 }}>
-          <div style={{ width:42, height:42, borderRadius:12, background:"linear-gradient(145deg,#1e4bd4,#3a7bfd)", display:"flex", alignItems:"center", justifyContent:"center", boxShadow:"0 0 32px rgba(58,123,253,.22)" }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" stroke="white" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+    <div style={{
+      minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
+      background: "var(--bg)", padding: "24px 16px",
+      backgroundImage: "linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px)",
+      backgroundSize: "40px 40px",
+    }}>
+      <div style={{ width: "100%", maxWidth: 420 }}>
+
+        {/* Header */}
+        <div style={{ marginBottom: 28 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+            <div style={{ width: 32, height: 32, borderRadius: 8, background: "var(--accent)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" stroke="white" strokeWidth="1.6" strokeLinecap="round"/></svg>
+            </div>
+            <span style={{ fontSize: 15, fontWeight: 700, color: "var(--text)", letterSpacing: "-.01em" }}>GitInterview</span>
           </div>
-          <div>
-            <p style={{ fontWeight:700, fontSize:17, color:"var(--text)", letterSpacing:"-.02em" }}>GitInterview</p>
-            <p style={{ fontSize:11, color:"var(--muted)" }}>AI interview from your actual code</p>
-          </div>
+          <h1 style={{ fontSize: 22, fontWeight: 700, color: "var(--text)", lineHeight: 1.35, marginBottom: 8, letterSpacing: "-.02em" }}>
+            Interview prep from<br />your actual codebase.
+          </h1>
+          <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.65 }}>
+            Drop a GitHub link. The AI reads your code and asks the questions a senior engineer would ask in a real interview — no generic leetcode, no fluff.
+          </p>
         </div>
 
-        <h1 style={{ fontSize:26, fontWeight:700, color:"#edf2fb", letterSpacing:"-.03em", marginBottom:8 }}>Practice interviews from your code</h1>
-        <p style={{ fontSize:14, color:"var(--muted)", marginBottom:32, lineHeight:1.65 }}>Paste a GitHub repo. The AI reads your code and interviews you like a real senior engineer — with follow-up questions, hints, and honest feedback.</p>
+        {/* Form card */}
+        <div style={{ background: "var(--bg-card)", border: "1px solid var(--border-mid)", borderRadius: 12, padding: "20px" }}>
 
-        <div style={{ display:"flex", flexDirection:"column", gap:18 }}>
           {/* Repo URL */}
-          <div>
-            <label style={{ display:"block", fontSize:11, color:"var(--muted)", marginBottom:7, fontWeight:700, letterSpacing:".06em" }}>REPOSITORY URL</label>
-            <div style={{ position:"relative" }}>
-              <span style={{ position:"absolute", left:14, top:"50%", transform:"translateY(-50%)", color:"var(--muted)" }}>
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77A5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
-              </span>
-              <input type="text" placeholder="https://github.com/username/repo" value={repoUrl} onChange={e => setRepoUrl(e.target.value)} onKeyDown={e => e.key === "Enter" && onStart()} className="input-field" style={{ paddingLeft:38 }} />
-            </div>
+          <div style={{ marginBottom: 18 }}>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".06em", marginBottom: 6 }}>GITHUB REPO</label>
+            <input
+              type="text"
+              placeholder="github.com/you/your-project"
+              value={repoUrl}
+              onChange={e => setRepoUrl(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && onStart()}
+              className="input-field"
+              style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13 }}
+            />
           </div>
 
           {/* Level */}
-          <div>
-            <label style={{ display:"block", fontSize:11, color:"var(--muted)", marginBottom:7, fontWeight:700, letterSpacing:".06em" }}>YOUR EXPERIENCE LEVEL</label>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:8 }}>
-              {levels.map(l => (
-                <button key={l.value} onClick={() => setCandidateLevel(l.value)} style={tileStyle(candidateLevel === l.value)}>
-                  <div style={{ fontSize:13, fontWeight:600 }}>{l.label}</div>
-                  <div style={{ fontSize:10, marginTop:2, opacity:.7 }}>{l.sub}</div>
+          <div style={{ marginBottom: 16 }}>
+            <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".06em", marginBottom: 6 }}>YOUR LEVEL</label>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 6 }}>
+              {[
+                { value: "junior", label: "Junior", sub: "0–2 yrs" },
+                { value: "mid",    label: "Mid",    sub: "2–5 yrs" },
+                { value: "senior", label: "Senior", sub: "5+ yrs"  },
+              ].map(l => (
+                <button key={l.value} onClick={() => setCandidateLevel(l.value)} style={tileBtn(candidateLevel === l.value)}>
+                  <div>{l.label}</div>
+                  <div style={{ fontSize: 10, marginTop: 2, opacity: .6 }}>{l.sub}</div>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Mode + Difficulty row */}
-          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:12 }}>
+          {/* Mode + Difficulty */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 20 }}>
             <div>
-              <label style={{ display:"block", fontSize:11, color:"var(--muted)", marginBottom:7, fontWeight:700, letterSpacing:".06em" }}>MODE</label>
-              <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                {modes.map(m => (
-                  <button key={m.value} onClick={() => setInterviewMode(m.value)} style={{ ...tileStyle(interviewMode === m.value), display:"flex", justifyContent:"space-between", alignItems:"center", padding:"8px 12px" }}>
-                    <span style={{ fontSize:12, fontWeight:600 }}>{m.label}</span>
-                    <span style={{ fontSize:10, opacity:.7 }}>{m.sub}</span>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".06em", marginBottom: 6 }}>MODE</label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {[
+                  { value: "practice", label: "Practice", sub: "hints on" },
+                  { value: "timed",    label: "Timed",    sub: "2 min/Q" },
+                  { value: "real",     label: "Real",     sub: "no hints" },
+                ].map(m => (
+                  <button key={m.value} onClick={() => setInterviewMode(m.value)} style={{ ...tileBtn(interviewMode === m.value), display: "flex", justifyContent: "space-between", alignItems: "center", padding: "7px 10px" }}>
+                    <span>{m.label}</span>
+                    <span style={{ fontSize: 10, opacity: .5, fontFamily: "'JetBrains Mono',monospace", fontWeight: 400 }}>{m.sub}</span>
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label style={{ display:"block", fontSize:11, color:"var(--muted)", marginBottom:7, fontWeight:700, letterSpacing:".06em" }}>DIFFICULTY</label>
-              <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
-                {difficulties.map(d => (
-                  <button key={d.value} onClick={() => setDifficulty(d.value)} style={{ ...tileStyle(difficulty === d.value), padding:"8px 12px" }}>
-                    <span style={{ fontSize:12, fontWeight:600 }}>{d.label}</span>
+              <label style={{ display: "block", fontSize: 11, fontWeight: 700, color: "var(--muted)", letterSpacing: ".06em", marginBottom: 6 }}>DIFFICULTY</label>
+              <div style={{ display: "flex", flexDirection: "column", gap: 5 }}>
+                {[
+                  { value: "easy",   label: "Easy"   },
+                  { value: "medium", label: "Medium" },
+                  { value: "hard",   label: "Hard"   },
+                ].map(d => (
+                  <button key={d.value} onClick={() => setDifficulty(d.value)} style={{ ...tileBtn(difficulty === d.value), padding: "7px 10px", textAlign: "left" }}>
+                    {d.label}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          <button onClick={onStart} className="btn-primary" disabled={!repoUrl.trim()} style={{ padding:"14px", fontSize:15, marginTop:4 }}>
-            Analyze my repo and start →
+          <button onClick={onStart} className="btn-primary" disabled={!repoUrl.trim()} style={{ width: "100%", padding: "12px", fontSize: 14 }}>
+            Start interview →
           </button>
         </div>
 
-        <div style={{ marginTop:16, display:"flex", gap:8, flexWrap:"wrap", justifyContent:"center" }}>
-          {["Private · never stored","Questions from your code","Real follow-up questions"].map((t,i) => (
-            <span key={i} style={{ fontSize:11, color:"var(--muted)", background:"var(--bg-card)", border:"1px solid var(--border)", borderRadius:6, padding:"3px 9px" }}>{t}</span>
-          ))}
-        </div>
+        <p style={{ marginTop: 14, fontSize: 11, color: "var(--dim)", textAlign: "center", lineHeight: 1.6 }}>
+          answers never stored &nbsp;·&nbsp; questions from your actual code &nbsp;·&nbsp; groq
+        </p>
       </div>
     </div>
   );
@@ -534,6 +542,7 @@ export default function Interview() {
   const [conversationHistory, setConversationHistory] = useState([]); // for AI context
   const [questionNumber,    setQuestionNumber]    = useState(1);
   const [followUpCount,     setFollowUpCount]     = useState(0);
+  const [maxFollowUps,      setMaxFollowUps]      = useState(2);
   const [sessionScores,     setSessionScores]     = useState([]);
   const [previousQuestions, setPreviousQuestions] = useState([]);
   const [contextSummary,    setContextSummary]    = useState("");
@@ -542,6 +551,7 @@ export default function Interview() {
   // Timer
   const [thinkCountdown, setThinkCountdown] = useState(THINK_SECONDS);
   const [answerTimer,    setAnswerTimer]    = useState(TIMED_SECONDS);
+  const [isTyping,       setIsTyping]       = useState(false);
   const timerRef = useRef(null);
 
   const [speakingIdx, setSpeakingIdx] = useState(null);
@@ -578,10 +588,32 @@ export default function Interview() {
     return () => clearInterval(id);
   }, [interviewState]);
 
+  // ── Typing detection ──
+  useEffect(() => {
+    if (interviewState !== "answering") {
+      setIsTyping(false);
+      return;
+    }
+    if (!input && !interimText) {
+      setIsTyping(false);
+      return;
+    }
+    setIsTyping(true);
+    const id = setTimeout(() => setIsTyping(false), 1500);
+    return () => clearTimeout(id);
+  }, [input, interimText, interviewState]);
+
   // ── Answer timer (timed mode) ──
   useEffect(() => {
+    if (interviewMode === "timed" && interviewState === "answering") {
+      setAnswerTimer(TIMED_SECONDS);
+    }
+  }, [interviewState, interviewMode]);
+
+  useEffect(() => {
     if (interviewMode !== "timed" || interviewState !== "answering") return;
-    setAnswerTimer(TIMED_SECONDS);
+    if (isTyping) return;
+
     timerRef.current = setInterval(() => {
       setAnswerTimer(t => {
         if (t <= 1) { clearInterval(timerRef.current); handleSubmit(); return 0; }
@@ -589,7 +621,7 @@ export default function Interview() {
       });
     }, 1000);
     return () => clearInterval(timerRef.current);
-  }, [interviewState, interviewMode]);
+  }, [interviewState, interviewMode, isTyping]);
 
   // ── Push interviewer message to chat ──
   const pushInterviewer = (text, msgType, extras = {}) => {
@@ -617,6 +649,7 @@ export default function Interview() {
       setPreviousQuestions(p => [...p, data.question]);
       setConversationHistory([{ role:"interviewer", content: data.question }]);
       setFollowUpCount(0);
+      setMaxFollowUps(Math.floor(Math.random() * 2) + 1); // Random 1 or 2
       const idx = messages.length + (messages.length > 0 ? 1 : 0);
       speakAndPush(data.question, "question", idx);
     } catch (err) {
@@ -675,7 +708,7 @@ export default function Interview() {
           mode: interviewMode,
           is_stuck: false,
           follow_up_count: followUpCount,
-          max_follow_ups: candidateLevel === "senior" ? 3 : 2,
+          max_follow_ups: maxFollowUps,
         }),
       });
       const turn = await res.json();
@@ -777,7 +810,7 @@ export default function Interview() {
     setInterviewState("idle");
     setMessages([]); setInput(""); setInterimText("");
     setCurrentQuestion(""); setConversationHistory([]);
-    setQuestionNumber(1); setFollowUpCount(0);
+    setQuestionNumber(1); setFollowUpCount(0); setMaxFollowUps(2);
     setSessionScores([]); setPreviousQuestions([]);
     setSessionSummary(null); setContextSummary("");
   };
@@ -823,7 +856,9 @@ export default function Interview() {
         setMicCountdown(prev => {
           if (prev <= 1) {
             clearInterval(id);
-            try { stt.start(); } catch(e){}
+            if (interviewState === "answering") {
+              try { stt.start(); } catch(e){}
+            }
             return 0;
           }
           return prev - 1;
@@ -831,7 +866,16 @@ export default function Interview() {
       }, 1000);
       return () => clearInterval(id);
     }
-  }, [micCountdown, stt]);
+  }, [micCountdown, stt.start, interviewState]);
+
+  useEffect(() => {
+    if (interviewState !== "answering") {
+      setMicCountdown(0);
+      if (stt.isRecording) {
+        try { stt.stop(); } catch(e){}
+      }
+    }
+  }, [interviewState, stt.isRecording, stt.stop]);
 
   // ── Auto-submit on silence ──
   useEffect(() => {
@@ -842,7 +886,7 @@ export default function Interview() {
       if (input.trim() || interimText.trim()) {
         handleSubmit();
       }
-    }, 2800);
+    }, 5500);
 
     return () => clearTimeout(timeoutId);
   }, [input, interimText, interviewState, stt.isRecording]);
@@ -901,8 +945,8 @@ export default function Interview() {
             <span className="tag" style={{ fontSize:10 }}>{candidateLevel}</span>
             <span className="tag" style={{ fontSize:10, background:"var(--purple-bg)", borderColor:"#200e40", color:"var(--purple)" }}>{interviewMode}</span>
             {interviewMode === "timed" && isAnswering && (
-              <span style={{ fontSize:12, fontFamily:"'JetBrains Mono',monospace", color:timerColor, background:"var(--bg-card)", border:`1px solid ${timerColor}40`, borderRadius:6, padding:"3px 8px" }}>
-                {timerDisplay()}
+              <span style={{ fontSize:12, fontFamily:"'JetBrains Mono',monospace", color: isTyping ? "var(--muted)" : timerColor, background:"var(--bg-card)", border:`1px solid ${isTyping ? "var(--border-mid)" : timerColor + "40"}`, borderRadius:6, padding:"3px 8px", transition: "all 0.3s" }}>
+                {isTyping ? "Paused" : timerDisplay()}
               </span>
             )}
           </div>
@@ -995,7 +1039,7 @@ export default function Interview() {
         {/* ── Input bar ── */}
         {!isSummary && (
           <div style={{ borderTop:"1px solid var(--border)", padding:"13px 20px 17px", background:"var(--bg)" }}>
-            {stt.isRecording && (
+            {stt.isRecording && isAnswering && (
               <div style={{ maxWidth:760, margin:"0 auto 10px", display:"flex", alignItems:"center", gap:8 }}>
                 <div style={{ width:7, height:7, borderRadius:"50%", background:"var(--red)", animation:"recordRing 1.2s ease infinite" }}/>
                 <span style={{ fontSize:12, color:"var(--red)", fontWeight:600 }}>Recording</span>
